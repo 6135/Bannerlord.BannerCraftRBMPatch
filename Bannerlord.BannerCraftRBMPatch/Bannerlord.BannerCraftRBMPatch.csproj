@@ -1,4 +1,4 @@
-<Project Sdk="Bannerlord.BUTRModule.Sdk/1.1.0.104">
+﻿<Project Sdk="Bannerlord.BUTRModule.Sdk/1.1.0.104">
 
   <PropertyGroup>
     <Version>0.0.1</Version>
@@ -46,6 +46,15 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" IncludeAssets="compile" />
     <PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.50" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Bannerlord.BannerCraft.1.2.4" PrivateAssets="all" IncludeAssets="compile" >
+      <HintPath>E:\GamesSteam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.BannerCraft\bin\Win64_Shipping_Client\Bannerlord.BannerCraft.1.2.4.dll</HintPath>
+		<Private>false</Private>
+		<PrivateAssets>all</PrivateAssets>
+		<ExcludeAssets>all</ExcludeAssets>
+    </Reference>
   </ItemGroup>
   
 </Project>
