@@ -35,7 +35,9 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Setup missing references from other Repository
-      uses: actions/checkout@v2
+      run: |
+        mkdir -p bin/Win64_Shipping_Client
+        ls -la
     - name: Get Latest Release Tag from Bannerlord.BannerCraft Repository
       id: get-release-tag
       run: |
