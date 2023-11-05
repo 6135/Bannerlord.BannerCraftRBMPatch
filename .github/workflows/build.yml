@@ -54,75 +54,66 @@ jobs:
           # Unzip the files inside the zip at Modules/Bannerlord.BannerCraft/bin/Win64_Shipping_Client folder to the bin/Win64_Shipping_Client folder
           unzip Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip -d extractedRepo
           sudo chmod -R 777 extractedRepo
-          ls -la
           ls -la extractedRepo
-          ls -la bin/Win64_Shipping_Client
-          ls -la extractedRepo/Modules/Bannerlord.BannerCraft/bin/Win64_Shipping_Client
           sudo cp extractedRepo/Modules/Bannerlord.BannerCraft/bin/Win64_Shipping_Client/* bin/Win64_Shipping_Client/
           ls -la bin/Win64_Shipping_Client
           # Remove the zip file and the extracted folder
-          sudo  rm Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip
-          sudo  rm -rf extractedRepo
+          sudo rm Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip
+          sudo rm -rf extractedRepo
       working-directory: ${{ github.workspace }}
-    # - name: Add References
-    #   run: |
-    #       # Replace 'path/to/references' with the path to the references within the unzipped files
-    #       # Replace 'YourProject.csproj' with the name of your project file
-    #       cp unzippedfiles/path/to/references/* YourProject.csproj
-    #   working-directory: ${{ github.workspace }}
 
-    # - name: Update version in BannerCraftRBMPatch.csproj
-    #   shell: pwsh
-    #   run: |
-    #     $branch = $env:GITHUB_REF.replace('refs/heads/', '')
-    #     if ($branch -match 'release\/(\d\.?){3,4}') {
-    #       $version = $branch.Split('/')[-1]
-    #       $path = '\Bannerlord.BannerCraftRBMPatch\Bannerlord.BannerCraftRBMPatch.csproj'
-    #       $xml = New-Object XML
-    #       $xml.Load($path)
-    #       $versionElement =  $xml.SelectSingleNode("//Version")
-    #       $versionElement.InnerText = $version
-    #       $xml.Save($path)
-    #       Write-Output "Modified to build with version ${version}"
-    #     } else {
-    #       Write-Output 'No need to modify version - this is not a release'
-    #     }
+    - name: Update version in BannerCraftRBMPatch.csproj
+      shell: pwsh
+      run: |
+        $branch = $env:GITHUB_REF.replace('refs/heads/', '')
+        if ($branch -match 'release\/(\d\.?){3,4}') {
+          $version = $branch.Split('/')[-1]
+          $path = '\Bannerlord.BannerCraftRBMPatch\Bannerlord.BannerCraftRBMPatch.csproj'
+          $xml = New-Object XML
+          $xml.Load($path)
+          $versionElement =  $xml.SelectSingleNode("//Version")
+          $versionElement.InnerText = $version
+          $xml.Save($path)
+          Write-Output "Modified to build with version ${version}"
+        } else {
+          Write-Output 'No need to modify version - this is not a release'
+        }
         
-    # - name: Build Module
-    #   shell: pwsh
-    #   run: |
-    #     $impl = $PWD.Path + "/bannerlord-implementations";
-    #     $path = $PWD.Path + "/bannerlord";
-    #     $final = $path + "/Modules/$env:REPO_NAME/bin/Win64_Shipping_Client/";
-    #     $proj = "$env:REPO_NAME/$env:REPO_NAME.csproj";
-    #     $pdll = $path + "/Modules/$env:REPO_NAME/bin/Win64_Shipping_Client/$env:REPO_NAME*.dll";
-    #     $ppdb = $path + "/Modules/$env:REPO_NAME/bin/Win64_Shipping_Client/$env:REPO_NAME*.pdb";
-    #     # The folders are required to be created before executing the script
-    #     New-Item -ItemType directory -Force -Path $impl;
-    #     New-Item -ItemType directory -Force -Path $path;
-    #     [string[]]$gameversions = Get-Content -Path Bannerlord.BannerCraftRBMPatch/supported-game-versions.txt;
-    #     # Process all implementations
-    #     For ($i = 0; $i -le $gameversions.Length - 1; $i++)
-    #     {
-    #         $gameversion = $gameversions[$i];
-    #         $version = $gameversion.substring(1);
-    #         $constgameversion = $gameversion.replace(".", "");
-    #         echo "::group::Build for $gameversion"
-    #         echo "Start building for gameversion = $gameversion"
-    #         dotnet clean $proj --configuration Release;
-    #         dotnet build $proj --configuration Release -p:OverrideGameVersion=$gameversion -p:GameFolder="$path" -p:ConstGameVersionWithPrefix="$constgameversion";
-    #         # Copy Implementations to the Implementations folder
-    #         Copy-Item $pdll $impl/;
-    #         Copy-Item $ppdb $impl/;
-    #         echo "::endgroup::"
-    #     }
-    #     # Copy Implementations to the Module
-    #     Copy-Item $impl/* $final;
-    #     # Delete Implementations folder
-    #     Remove-Item -Recurse $impl;
+    - name: Build Module
+      shell: pwsh
+      run: |
+        $impl = $PWD.Path + "/bannerlord-implementations";
+        $path = $PWD.Path + "/bannerlord";
+        $final = $path + "/Modules/$env:REPO_NAME/bin/Win64_Shipping_Client/";
+        $proj = "$env:REPO_NAME/$env:REPO_NAME.csproj";
+        $pdll = $path + "/Modules/$env:REPO_NAME/bin/Win64_Shipping_Client/$env:REPO_NAME*.dll";
+        $ppdb = $path + "/Modules/$env:REPO_NAME/bin/Win64_Shipping_Client/$env:REPO_NAME*.pdb";
+        # The folders are required to be created before executing the script
+        New-Item -ItemType directory -Force -Path $impl;
+        New-Item -ItemType directory -Force -Path $path;
+        [string[]]$gameversions = Get-Content -Path Bannerlord.BannerCraftRBMPatch/supported-game-versions.txt;
+        # Process all implementations
+        For ($i = 0; $i -le $gameversions.Length - 1; $i++)
+        {
+            $gameversion = $gameversions[$i];
+            $version = $gameversion.substring(1);
+            $constgameversion = $gameversion.replace(".", "");
+            echo "::group::Build for $gameversion"
+            echo "Start building for gameversion = $gameversion"
+            dotnet clean $proj --configuration Release;
+            dotnet build $proj --configuration Release -p:OverrideGameVersion=$gameversion -p:GameFolder="$path" -p:ConstGameVersionWithPrefix="$constgameversion";
+            # Copy Implementations to the Implementations folder
+            Copy-Item $pdll $impl/;
+            Copy-Item $ppdb $impl/;
+            echo "::endgroup::"
+        }
+        # Copy Implementations to the Module
+        Copy-Item $impl/* $final;
+        # Delete Implementations folder
+        Remove-Item -Recurse $impl;
         
-    # - name: Upload build
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: Build
-    #     path: ./bannerlord/
+    - name: Upload build
+      uses: actions/upload-artifact@v3
+      with:
+        name: Build
+        path: ./bannerlord/
