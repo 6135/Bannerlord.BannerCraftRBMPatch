@@ -52,7 +52,7 @@ jobs:
           wget https://github.com/6135/Bannerlord.BannerCraft/releases/download/${{ steps.get-release-tag.outputs.tag }}/Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip -O Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip
           # Unzip the files inside the zip at Modules/Bannerlord.BannerCraft/bin/Win64_Shipping_Client folder to the bin/Win64_Shipping_Client folder
           unzip Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip  -d extractedRepo
-          cp extractedRepo/Modules/Bannerlord.BannerCraft/bin/Win64_Shipping_Client/* bin/Win64_Shipping_Client/
+          mv extractedRepo/Modules/Bannerlord.BannerCraft/bin/Win64_Shipping_Client/* bin/Win64_Shipping_Client/
           ls -la bin/Win64_Shipping_Client
           # Remove the zip file and the extracted folder
           rm Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip
