@@ -21,9 +21,8 @@ namespace Bannerlord.BannercraftRBMPatch
         {
             base.OnSubModuleLoad();
             //patch the GetRandomModifierWithTargetRBMPostfix method from CraftingMixin in bannercraft namespace
-            //check if both Bannerlord.BannerCraft and RBM are loaded
-            if (AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name.Contains("Bannerlord.BannerCraft")) &&
-                AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name == "RBM"))
+            //check if Bannerlord.BannerCraft is loaded
+            if (AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name.Contains("Bannerlord.BannerCraft")))
                 _harmony.Patch(AccessTools.Method(typeof(CraftingMixin), "GetRandomModifierWithTarget"),
                     postfix: new HarmonyMethod(AccessTools.Method(typeof(SubModule),
                     "GetRandomModifierWithTargetRBMPostfix"))
@@ -150,7 +149,7 @@ namespace Bannerlord.BannercraftRBMPatch
                 getItemFieldDelegateInstanceInt(im, Speed) +
                 getItemFieldDelegateInstanceInt(im, Damage);
             //if sum is negative, abs it and multiply by the price multiplier and return it negative using branchless code
-           
+
             if (sum < 0)
                 return sum / getItemFieldDelegateInstanceFloat(im, PriceMultiplier);
             else
