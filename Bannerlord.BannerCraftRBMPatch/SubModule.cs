@@ -21,10 +21,13 @@ namespace Bannerlord.BannercraftRBMPatch
         {
             base.OnSubModuleLoad();
             //patch the GetRandomModifierWithTargetRBMPostfix method from CraftingMixin in bannercraft namespace
-            _harmony.Patch(
-                AccessTools.Method(typeof(CraftingMixin), "GetRandomModifierWithTarget"),
-                postfix: new HarmonyMethod(AccessTools.Method(typeof(SubModule), "GetRandomModifierWithTargetRBMPostfix"))
-                );
+            //check if both Bannerlord.BannerCraft and RBM are loaded
+            if (AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name.Contains("Bannerlord.BannerCraft")) &&
+                AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name == "RBM"))
+                _harmony.Patch(AccessTools.Method(typeof(CraftingMixin), "GetRandomModifierWithTarget"),
+                    postfix: new HarmonyMethod(AccessTools.Method(typeof(SubModule),
+                    "GetRandomModifierWithTargetRBMPostfix"))
+                    );
         }
 
         private delegate T GetItemFieldDelegate<out T>(ItemModifier item, string _fieldName);
@@ -135,9 +138,7 @@ namespace Bannerlord.BannercraftRBMPatch
             GetItemFieldDelegate<short>? getItemFieldDelegateInstanceShort = GetItemFieldShort;
             GetItemFieldDelegate<float>? getItemFieldDelegateInstanceFloat = GetItemFieldFloat;
             //sum of all the modifiers and multiply by the price multiplier, using /getItemFieldDelegateInstanceInt /and getItemFieldDelegateInstanceShort
-
-            return (
-                //sum of all the modifiers using the delegates
+            float sum =
                 getItemFieldDelegateInstanceFloat(im, MountHitPoints) +
                 getItemFieldDelegateInstanceFloat(im, ChargeDamage) +
                 getItemFieldDelegateInstanceFloat(im, Maneuver) +
@@ -147,8 +148,13 @@ namespace Bannerlord.BannercraftRBMPatch
                 getItemFieldDelegateInstanceInt(im, Armor) +
                 getItemFieldDelegateInstanceInt(im, MissileSpeed) +
                 getItemFieldDelegateInstanceInt(im, Speed) +
-                getItemFieldDelegateInstanceInt(im, Damage)
-                ) * getItemFieldDelegateInstanceFloat(im, PriceMultiplier);
+                getItemFieldDelegateInstanceInt(im, Damage);
+            //if sum is negative, abs it and multiply by the price multiplier and return it negative using branchless code
+           
+            if (sum < 0)
+                return sum / getItemFieldDelegateInstanceFloat(im, PriceMultiplier);
+            else
+                return sum * getItemFieldDelegateInstanceFloat(im, PriceMultiplier);
         }
 
         public static void GetRandomModifierWithTargetRBMPostfix(ref ItemModifier __result, ItemModifierGroup modifierGroup, int modifierTier)
@@ -156,18 +162,20 @@ namespace Bannerlord.BannercraftRBMPatch
             //check if there are more than 6 modifiers
             if (modifierGroup.ItemModifiers.Count() > 6)
             {
-                var results = modifierGroup.ItemModifiers.OrderBy(mod => getModifierSum(mod));
-                //create a new list with the same order, but with the sums of the modifiers as the key
-                var resultsWithSum = results.ToDictionary(mod => getModifierSum(mod), mod => mod);
+                TaleWorlds.Library.MBReadOnlyList<ItemModifier> modifiers = modifierGroup.ItemModifiers;
+                //remove duplicate itemModifiers and order them by the sum of the modifiers
+                IOrderedEnumerable<ItemModifier> filteredOrdered = modifiers.Distinct().OrderBy(mod => getModifierSum(mod));
+                //create a new list with the same order, but with the sums of the modifiers as the key, there can be duplicate k
+                IEnumerable<KeyValuePair<float, ItemModifier>> resultsWithSum = filteredOrdered.Select(mod => new KeyValuePair<float, ItemModifier>(getModifierSum(mod), mod));
 
                 //get the 3 highest sums
-                var highest = resultsWithSum.Skip(resultsWithSum.Count - 3).Take(3);
+                var highest = resultsWithSum.Skip(resultsWithSum.Count() - 3).Take(3);
                 //get all the negative sums
                 var negative = resultsWithSum.Where(mod => mod.Key < 0);
                 //order the negative sums by the lowest first
                 var negativeOrdered = negative.OrderBy(mod => mod.Key);
-                //get the 3 highest sums of the negative sums without TakeLast
-                var negativeHighest = negativeOrdered.Skip(resultsWithSum.Count - 3).Take(3);
+                //get the 2 highest sums of the negative sums without TakeLast
+                var negativeHighest = negativeOrdered.Skip(negativeOrdered.Count() - 2).Take(2);
                 //join the 3 highest sums and the 3 highest negative sums
                 var joined = negativeHighest.Concat(highest);
                 //return the modifier at modifierTier

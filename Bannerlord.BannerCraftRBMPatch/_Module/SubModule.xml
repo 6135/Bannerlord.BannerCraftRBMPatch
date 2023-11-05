@@ -33,7 +33,7 @@
 		<DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" version="$gameversion$.*" />
 		<DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" version="$gameversion$.*" />
 		<DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" version="$gameversion$.*" />
-		<DependedModuleMetadata id="Bannerlord.BannerCraft" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="Bannerlord.BannerCraft" order="LoadBeforeThis" version="1.*" />
 		<DependedModuleMetadata id="RBM" order="LoadBeforeThis" />
 	</DependedModuleMetadatas>
 	<SubModules>
