@@ -35,7 +35,9 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Setup missing references from other Repository
-      uses: actions/checkout@v2
+      run: |
+        mkdir -p bin/Win64_Shipping_Client
+        ls -la
     - name: Get Latest Release Tag from Bannerlord.BannerCraft Repository
       id: get-release-tag
       run: |
@@ -48,7 +50,9 @@ jobs:
     - name: Download and Unzip from Bannerlord.BannerCraft Repository
       run: |
           wget https://github.com/6135/Bannerlord.BannerCraft/releases/download/${{ steps.get-release-tag.outputs.tag }}/Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip -O Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip
-          unzip Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip -d unzippedfiles
+          # Unzip the files inside the Modules/Bannerlord.BannerCraft/bin/Win64_Shipping_Client folder to the bin/Win64_Shipping_Client folder
+          unzip -o Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip -d bin/Win64_Shipping_Client
+          ls -la bin/Win64_Shipping_Client
 
       working-directory: ${{ github.workspace }}
 
