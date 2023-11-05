@@ -56,12 +56,13 @@ jobs:
           ls -la
           ls -la extractedRepo
           ls -la bin/Win64_Shipping_Client
+          ls -la extractedRepo/Modules/Bannerlord.BannerCraft/bin/Win64_Shipping_Client
           sudo cp extractedRepo/Modules/Bannerlord.BannerCraft/bin/Win64_Shipping_Client/* bin/Win64_Shipping_Client/
           ls -la bin/Win64_Shipping_Client
           # Remove the zip file and the extracted folder
           sudo  rm Bannerlord.BannerCraft-release-${{ steps.get-release-tag.outputs.tag }}.zip
           sudo  rm -rf extractedRepo
-
+      working-directory: ${{ github.workspace }}
     # - name: Add References
     #   run: |
     #       # Replace 'path/to/references' with the path to the references within the unzipped files
