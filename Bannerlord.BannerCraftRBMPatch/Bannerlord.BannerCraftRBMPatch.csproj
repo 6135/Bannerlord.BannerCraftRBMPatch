@@ -49,8 +49,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Bannerlord.BannerCraft.1.2.4" PrivateAssets="all" IncludeAssets="compile" >
-      <HintPath>$(BANNERLORD_GAME_DIR)\Modules\Bannerlord.BannerCraft\bin\Win64_Shipping_Client\Bannerlord.BannerCraft.1.2.4.dll</HintPath>
+    <Reference Include="Bannerlord.BannerCraft.$(gameversion)" PrivateAssets="all" IncludeAssets="compile" >
+      <HintPath>..\bin\Win64_Shipping_Client\Bannerlord.BannerCraft.$(gameversion).dll</HintPath>
 		<Private>false</Private>
 		<PrivateAssets>all</PrivateAssets>
 		<ExcludeAssets>all</ExcludeAssets>
