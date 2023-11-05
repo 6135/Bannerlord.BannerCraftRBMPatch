@@ -161,11 +161,11 @@ namespace Bannerlord.BannercraftRBMPatch
             //check if there are more than 6 modifiers
             if (modifierGroup.ItemModifiers.Count() > 6)
             {
-                TaleWorlds.Library.MBReadOnlyList<ItemModifier> modifiers = modifierGroup.ItemModifiers;
+                var modifiers = modifierGroup.ItemModifiers;
                 //remove duplicate itemModifiers and order them by the sum of the modifiers
-                IOrderedEnumerable<ItemModifier> filteredOrdered = modifiers.Distinct().OrderBy(mod => getModifierSum(mod));
+                var filteredOrdered = modifiers.Distinct().OrderBy(mod => getModifierSum(mod));
                 //create a new list with the same order, but with the sums of the modifiers as the key, there can be duplicate k
-                IEnumerable<KeyValuePair<float, ItemModifier>> resultsWithSum = filteredOrdered.Select(mod => new KeyValuePair<float, ItemModifier>(getModifierSum(mod), mod));
+                var resultsWithSum = filteredOrdered.Select(mod => new KeyValuePair<float, ItemModifier>(getModifierSum(mod), mod));
 
                 //get the 3 highest sums
                 var highest = resultsWithSum.Skip(resultsWithSum.Count() - 3).Take(3);
