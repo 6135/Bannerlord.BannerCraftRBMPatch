@@ -1,13 +1,10 @@
-﻿using Bannerlord.UIExtenderEx;
+﻿using Bannerlord.BannerCraft.Mixins;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
-using Bannerlord.BannerCraft.Mixins;
-using System.Reflection;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Bannerlord.BannercraftRBMPatch
 {
@@ -74,22 +71,21 @@ namespace Bannerlord.BannercraftRBMPatch
         }
 
 #else
-        private static string MountHitPoints = "MountHitPoints";
-        private static string ChargeDamage = "ChargeDamage";
-        private static string Maneuver = "Maneuver";
-        private static string MountSpeed = "MountSpeed";
-        private static string StackCount = "StackCount";
-        private static string HitPoints = "HitPoints";
-        private static string Armor = "Armor";
-        private static string MissileSpeed = "MissileSpeed";
-        private static string Speed = "Speed";
-        private static string Damage = "Damage";
-        private static string PriceMultiplier = "PriceMultiplier";
+        private static readonly string MountHitPoints = "MountHitPoints";
+        private static readonly string ChargeDamage = "ChargeDamage";
+        private static readonly string Maneuver = "Maneuver";
+        private static readonly string MountSpeed = "MountSpeed";
+        private static readonly string StackCount = "StackCount";
+        private static readonly string HitPoints = "HitPoints";
+        private static readonly string Armor = "Armor";
+        private static readonly string MissileSpeed = "MissileSpeed";
+        private static readonly string Speed = "Speed";
+        private static readonly string Damage = "Damage";
+        private static readonly string PriceMultiplier = "PriceMultiplier";
 
         //they were into properties.
         private static int GetItemFieldInt(ItemModifier item, string _fieldName)
         {
-            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
             var value = item.GetType()?.GetProperty(_fieldName)?.GetValue(item);
             if (value is not null)
                 return (int)value;
@@ -98,7 +94,6 @@ namespace Bannerlord.BannercraftRBMPatch
 
         private static short GetItemFieldShort(ItemModifier item, string _fieldName)
         {
-            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
             var value = item.GetType()?.GetProperty(_fieldName)?.GetValue(item);
             if (value is not null)
                 return (short)value;
@@ -108,7 +103,6 @@ namespace Bannerlord.BannercraftRBMPatch
         //float
         private static float GetItemFieldFloat(ItemModifier item, string _fieldName)
         {
-            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
             var value = item.GetType()?.GetProperty(_fieldName)?.GetValue(item);
             if (value is not null)
                 return (float)value;

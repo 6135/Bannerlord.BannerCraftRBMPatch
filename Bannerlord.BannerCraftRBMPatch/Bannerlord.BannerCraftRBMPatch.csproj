@@ -1,7 +1,7 @@
 <Project Sdk="Bannerlord.BUTRModule.Sdk/1.1.0.104">
 
   <PropertyGroup>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
     <Platforms>x64</Platforms>
     <LangVersion>10.0</LangVersion>
@@ -37,6 +37,7 @@
     <MCMVersion>5.9.1</MCMVersion>
     <BUTRModuleLoaderVersion>1.0.1.44</BUTRModuleLoaderVersion>
     <HarmonyExtensionsVersion>3.2.0.77</HarmonyExtensionsVersion>
+    <BaseOutputPath>C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.BannerCraftRBMPatch\bin\Win64_Shipping_Client</BaseOutputPath>
     <!--
     <BUTRSharedVersion>3.0.0.135</BUTRSharedVersion>
     <BUTRModuleManagerVersion>5.0.198</BUTRModuleManagerVersion>
@@ -49,18 +50,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Bannerlord.BannerCraft.$(gameversion)" PrivateAssets="all" IncludeAssets="compile">
-      <HintPath>..\bin\Win64_Shipping_Client\Bannerlord.BannerCraft.$(gameversion).dll</HintPath>
-		<Private>false</Private>
-		<PrivateAssets>all</PrivateAssets>
-		<ExcludeAssets>all</ExcludeAssets>
+    <Reference Include="Bannerlord.BannerCraft.1.2.8">
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.BannerCraft\bin\Win64_Shipping_Client\Bannerlord.BannerCraft.1.2.8.dll</HintPath>
     </Reference>
 
   </ItemGroup>
     <ItemGroup Condition="'$(gameversion)' == '1.1.1'">
-		<PackageReference Include="Bannerlord.ReferenceAssemblies.Core"  Version="$(gameversion).*-*" PrivateAssets="All" />
-		<PackageReference Include="Bannerlord.ReferenceAssemblies.Native"   Version="$(gameversion).*-*" PrivateAssets="All" />
-		<PackageReference Include="Bannerlord.ReferenceAssemblies.StoryMode"   Version="$(gameversion).*-*" PrivateAssets="All" />
-		<PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox"   Version="$(gameversion).*-*" PrivateAssets="All" />
+		<PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(gameversion).*-*" PrivateAssets="All" />
+		<PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(gameversion).*-*" PrivateAssets="All" />
+		<PackageReference Include="Bannerlord.ReferenceAssemblies.StoryMode" Version="$(gameversion).*-*" PrivateAssets="All" />
+		<PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(gameversion).*-*" PrivateAssets="All" />
 	</ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="Bannerlord.ButterLib" Version="2.9.7" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="Bannerlord.MCM" Version="5.9.2" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="Bannerlord.ReferenceAssemblies" Version="1.2.9.35636" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="Bannerlord.UIExtenderEx" Version="2.11.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    </ItemGroup>
 </Project>
