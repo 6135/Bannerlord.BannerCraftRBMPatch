@@ -12,7 +12,7 @@ namespace Bannerlord.BannercraftRBMPatch
     {
         private static readonly string Namespace = typeof(SubModule).Namespace;
 
-        private readonly Harmony _harmony = new Harmony(Namespace);
+        private readonly Harmony _harmony = new(Namespace);
 
         protected override void OnSubModuleLoad()
         {
