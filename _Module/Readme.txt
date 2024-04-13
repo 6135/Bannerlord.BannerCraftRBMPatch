@@ -1,1 +1,0 @@
-Adds compatibility between BannerCraft and any mods that add more modifiers to bannercraft's craftable items.
